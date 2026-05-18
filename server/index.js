@@ -16,7 +16,10 @@ app.use('/api/rules', rulesRouter);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on :${PORT}`));
+// Only listen locally; Vercel handles the server lifecycle
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => console.log(`Server running on :${PORT}`));
+}
 
 export default app;

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { getRules, createRule, deleteRule } from '../services/supabase.js';
-import { registerWebhook, getAccount } from '../services/monday.js';
 
 const router = Router();
 
