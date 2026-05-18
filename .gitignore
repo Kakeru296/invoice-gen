@@ -3,3 +3,7 @@ node_modules/
 dist/
 .vercel/
 coverage/
+.vercel
+.playwright-mcp/
+supabase-*.png
+supabase/.temp/
