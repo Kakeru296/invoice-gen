@@ -1,0 +1,20 @@
+.rule-list-empty {
+  text-align: center; color: #676879; padding: 32px;
+  background: #fff; border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); font-size: 14px;
+}
+.rule-list h2 { font-size: 16px; font-weight: 600; color: #323338; margin-bottom: 12px; }
+.rule-item {
+  background: #fff; border-radius: 8px; padding: 14px 16px;
+  margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rule-info { display: flex; flex-direction: column; gap: 2px; }
+.rule-board { font-size: 14px; font-weight: 600; color: #323338; }
+.rule-meta { font-size: 12px; color: #676879; }
+.btn-delete {
+  background: none; border: 1px solid #d83a52; color: #d83a52;
+  padding: 6px 12px; border-radius: 4px; font-size: 13px;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-delete:hover { background: #d83a52; color: #fff; }

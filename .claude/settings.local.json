@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp -r /tmp/everything-claude-code/rules/common ~/.claude/rules/common)",
+      "Bash(cp -r /tmp/everything-claude-code/rules/typescript ~/.claude/rules/typescript)",
+      "Bash(cp -r /tmp/everything-claude-code/rules/python ~/.claude/rules/python)",
+      "Bash(cp -r /tmp/everything-claude-code/rules/golang ~/.claude/rules/golang)",
+      "Bash(npm install *)",
+      "Bash(node scripts/install-apply.js --help)",
+      "Bash(node scripts/install-apply.js --dry-run typescript python golang)",
+      "Bash(node scripts/install-apply.js typescript python golang)",
+      "Skill(ecc:plan)",
+      "Read(//Users/kakeru/Desktop/app/hand-off/**)",
+      "Read(//Users/kakeru/.claude/**)",
+      "Bash(npm --version)",
+      "Bash(npm list *)",
+      "Bash(npm init *)",
+      "Bash(npm search *)",
+      "Bash(export ECC_GATEGUARD=off)",
+      "Bash(npm run *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
