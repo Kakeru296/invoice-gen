@@ -1,7 +1,7 @@
 {
-  "name": "smart-notify",
+  "name": "invoice-gen",
   "version": "0.1.0",
-  "description": "monday.com board change notifications to Slack / Teams / Email",
+  "description": "Generate professional invoices and quotes from monday.com board items in 2 clicks",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -23,6 +23,7 @@
     "express": "^5.2.1",
     "monday-sdk-js": "^0.5.8",
     "monday-ui-react-core": "^2.149.5",
+    "pdfkit": "^0.15.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "vite": "^8.0.13"

@@ -1,19 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server/index.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["server/**"] }
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
+  "rewrites": [
+    { "source": "/oauth/(.*)", "destination": "/api/server" },
+    { "source": "/api/(.*)", "destination": "/api/server" }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "server/index.js" },
-    { "src": "/(.*)", "dest": "dist/$1" }
-  ]
+  "functions": {
+    "api/server.js": { "maxDuration": 30 }
+  }
 }

@@ -50,7 +50,9 @@
       "mcp__playwright__browser_navigate_back",
       "mcp__playwright__browser_run_code_unsafe",
       "mcp__playwright__browser_handle_dialog",
-      "mcp__playwright__browser_tabs"
+      "mcp__playwright__browser_tabs",
+      "Bash(git rm *)",
+      "mcp__plugin_ecc_exa__web_search_exa"
     ]
   }
 }

@@ -2,24 +2,28 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import oauthRouter from './routes/oauth.js';
-import webhookRouter from './routes/webhook.js';
-import rulesRouter from './routes/rules.js';
+import invoiceRouter from './routes/invoice.js';
+import templateRouter from './routes/template.js';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/oauth', oauthRouter);
-app.use('/api/webhook', webhookRouter);
-app.use('/api/rules', rulesRouter);
+app.get('/health', (_req, res) => res.json({ ok: true, app: 'invoice-gen' }));
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.use('/oauth', oauthRouter);
+app.use('/api/invoice', invoiceRouter);
+app.use('/api/template', templateRouter);
 
-// Only listen locally; Vercel handles the server lifecycle
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message || 'Internal server error' });
+});
+
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   const PORT = process.env.PORT || 3001;
-  app.listen(PORT, () => console.log(`Server running on :${PORT}`));
+  app.listen(PORT, () => console.log(`InvoiceGen server running on :${PORT}`));
 }
 
 export default app;

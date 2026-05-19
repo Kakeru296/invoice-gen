@@ -1,32 +1,35 @@
-import { Router } from 'express';
-import { exchangeCodeForToken } from '../services/monday.js';
+import express from 'express';
 import { upsertAccount } from '../services/supabase.js';
 
-const router = Router();
+const router = express.Router();
 
-router.get('/install', (req, res) => {
-  const params = new URLSearchParams({
-    client_id: process.env.MONDAY_CLIENT_ID,
-    redirect_uri: `${process.env.APP_URL}/api/oauth/callback`,
-  });
-  res.redirect(`https://auth.monday.com/oauth2/authorize?${params}`);
+router.get('/install', (_req, res) => {
+  const url = new URL('https://auth.monday.com/oauth2/authorize');
+  url.searchParams.set('client_id', process.env.MONDAY_CLIENT_ID);
+  url.searchParams.set('redirect_uri', `${process.env.APP_URL}/oauth/callback`);
+  res.redirect(url.toString());
 });
 
 router.get('/callback', async (req, res) => {
   const { code } = req.query;
   if (!code) return res.status(400).send('Missing code');
-  try {
-    const token = await exchangeCodeForToken(code);
-    await upsertAccount({
-      accountId: String(token.account_id),
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token || null,
-    });
-    res.redirect(`${process.env.APP_URL}?installed=true`);
-  } catch (err) {
-    console.error('OAuth callback error:', err);
-    res.status(500).send('Authentication failed');
-  }
+
+  const tokenRes = await fetch('https://auth.monday.com/oauth2/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code,
+      client_id: process.env.MONDAY_CLIENT_ID,
+      client_secret: process.env.MONDAY_CLIENT_SECRET,
+      redirect_uri: `${process.env.APP_URL}/oauth/callback`,
+    }),
+  });
+
+  if (!tokenRes.ok) return res.status(400).send('Token exchange failed');
+  const { access_token, account_id } = await tokenRes.json();
+
+  await upsertAccount({ account_id: String(account_id), access_token });
+  res.send('<script>window.close();</script><p>App installed! You can close this window.</p>');
 });
 
 export default router;

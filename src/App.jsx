@@ -1,72 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import mondaySdk from 'monday-sdk-js';
-import RuleBuilder from './components/RuleBuilder.jsx';
-import RuleList from './components/RuleList.jsx';
+import ItemSelector from './components/ItemSelector.jsx';
+import TemplateSettings from './components/TemplateSettings.jsx';
+import InvoiceHistory from './components/InvoiceHistory.jsx';
 import './App.css';
 
 const monday = mondaySdk();
 
 export default function App() {
   const [context, setContext] = useState(null);
-  const [rules, setRules] = useState([]);
+  const [tab, setTab] = useState('create'); // create | settings | history
+  const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    monday.listen('context', (res) => setContext(res.data));
-    monday.execute('valueCreatedForUser');
+    monday.listen('context', async (res) => {
+      setContext(res.data);
+      try {
+        const resp = await fetch(`/api/template/${res.data.account?.id}`);
+        const json = await resp.json();
+        setTemplate(json.template);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    });
   }, []);
 
-  useEffect(() => {
-    if (!context?.account?.id) return;
-    fetchRules(context.account.id);
-  }, [context]);
-
-  async function fetchRules(accountId) {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/rules?accountId=${accountId}`);
-      const data = await res.json();
-      setRules(data.rules || []);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleRuleCreate(rule) {
-    const res = await fetch('/api/rules', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...rule, accountId: context.account.id }),
-    });
-    const data = await res.json();
-    setRules((prev) => [...prev, data.rule]);
-  }
-
-  async function handleRuleDelete(ruleId) {
-    await fetch(`/api/rules/${ruleId}?accountId=${context.account.id}`, { method: 'DELETE' });
-    setRules((prev) => prev.filter((r) => r.id !== ruleId));
-  }
-
-  if (loading) return (
-    <div className="app">
-      <div className="hero">
-        <span className="hero-icon">🔔</span>
-        <h1>Smart Notify</h1>
-        <p className="tagline">monday.com → Slack & Teams in 30 seconds</p>
+  if (loading) {
+    return (
+      <div className="loading">
+        <div className="spinner" />
+        <p>Loading InvoiceGen…</p>
       </div>
-      <div className="loading">Loading your rules...</div>
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="app">
-      <div className="hero">
-        <span className="hero-icon">🔔</span>
-        <h1>Smart Notify</h1>
-        <p className="tagline">Get notified in Slack or Teams when your boards change — no Automation setup needed</p>
-      </div>
-      <RuleBuilder onSubmit={handleRuleCreate} context={context} />
-      <RuleList rules={rules} onDelete={handleRuleDelete} />
+      <header className="app-header">
+        <div className="logo">
+          <span className="logo-icon">📄</span>
+          <span className="logo-text">InvoiceGen</span>
+        </div>
+        <nav className="tabs">
+          {[
+            { id: 'create', label: 'Create Invoice' },
+            { id: 'history', label: 'History' },
+            { id: 'settings', label: 'Settings' },
+          ].map(t => (
+            <button
+              key={t.id}
+              className={`tab ${tab === t.id ? 'active' : ''}`}
+              onClick={() => setTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
+      </header>
+
+      <main className="app-main">
+        {!template && tab !== 'settings' && (
+          <div className="setup-banner">
+            <span>⚠️ Set up your company info before generating invoices.</span>
+            <button onClick={() => setTab('settings')}>Go to Settings →</button>
+          </div>
+        )}
+
+        {tab === 'create' && (
+          <ItemSelector context={context} template={template} />
+        )}
+        {tab === 'settings' && (
+          <TemplateSettings
+            context={context}
+            template={template}
+            onSaved={(t) => { setTemplate(t); setTab('create'); }}
+          />
+        )}
+        {tab === 'history' && (
+          <InvoiceHistory context={context} />
+        )}
+      </main>
     </div>
   );
 }
