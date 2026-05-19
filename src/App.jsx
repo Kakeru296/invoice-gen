@@ -12,9 +12,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    monday.listen('context', (res) => {
-      setContext(res.data);
-    });
+    monday.listen('context', (res) => setContext(res.data));
     monday.execute('valueCreatedForUser');
   }, []);
 
@@ -45,16 +43,28 @@ export default function App() {
   }
 
   async function handleRuleDelete(ruleId) {
-    await fetch(`/api/rules/${ruleId}`, { method: 'DELETE' });
+    await fetch(`/api/rules/${ruleId}?accountId=${context.account.id}`, { method: 'DELETE' });
     setRules((prev) => prev.filter((r) => r.id !== ruleId));
   }
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return (
+    <div className="app">
+      <div className="hero">
+        <span className="hero-icon">🔔</span>
+        <h1>Smart Notify</h1>
+        <p className="tagline">monday.com → Slack & Teams in 30 seconds</p>
+      </div>
+      <div className="loading">Loading your rules...</div>
+    </div>
+  );
 
   return (
     <div className="app">
-      <h1>Smart Notify</h1>
-      <p className="subtitle">Notify Slack or Teams when your board changes</p>
+      <div className="hero">
+        <span className="hero-icon">🔔</span>
+        <h1>Smart Notify</h1>
+        <p className="tagline">Get notified in Slack or Teams when your boards change — no Automation setup needed</p>
+      </div>
       <RuleBuilder onSubmit={handleRuleCreate} context={context} />
       <RuleList rules={rules} onDelete={handleRuleDelete} />
     </div>

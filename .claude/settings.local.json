@@ -41,7 +41,16 @@
       "Bash(vercel *)",
       "Bash(pip3 install *)",
       "Bash(python3 /Users/kakeru/Desktop/app2/scripts/create_assets.py)",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "Bash(sed -i '' 's/MONDAY_CLIENT_ID=.*/MONDAY_CLIENT_ID=acc2ad9f16dda68999bf45d1a58889e3/' .env)",
+      "Bash(sed -i '' 's/MONDAY_CLIENT_SECRET=.*/MONDAY_CLIENT_SECRET=00ecc0026363387c965a3c676251c613/' .env)",
+      "Bash(sed -i '' 's/MONDAY_SIGNING_SECRET=.*/MONDAY_SIGNING_SECRET=727d8a90f3429e6d49f6e20b0b976338/' .env)",
+      "Bash(curl *)",
+      "Bash(python3 -m json.tool)",
+      "mcp__playwright__browser_navigate_back",
+      "mcp__playwright__browser_run_code_unsafe",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp__playwright__browser_tabs"
     ]
   }
 }
