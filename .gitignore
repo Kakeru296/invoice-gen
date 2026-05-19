@@ -7,3 +7,6 @@ coverage/
 .playwright-mcp/
 supabase-*.png
 supabase/.temp/
+*.png
+*.jpeg
+.playwright-mcp/
