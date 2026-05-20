@@ -12,12 +12,15 @@ export default function App() {
   const [tab, setTab] = useState('create'); // create | settings | history
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isViewOnly, setIsViewOnly] = useState(false);
 
   useEffect(() => {
     monday.listen('context', async (res) => {
-      setContext(res.data);
+      const ctx = res.data;
+      setContext(ctx);
+      setIsViewOnly(!!ctx.isViewOnly);
       try {
-        const resp = await fetch(`/api/template/${res.data.account?.id}`);
+        const resp = await fetch(`/api/template/${ctx.account?.id}`);
         const json = await resp.json();
         setTemplate(json.template);
       } catch (e) {
@@ -33,6 +36,16 @@ export default function App() {
       <div className="loading">
         <div className="spinner" />
         <p>Loading InvoiceGen…</p>
+      </div>
+    );
+  }
+
+  if (isViewOnly) {
+    return (
+      <div className="view-only-message">
+        <span className="view-only-icon">🔒</span>
+        <h2>View-only access</h2>
+        <p>As a viewer, you are unable to create or manage invoices. Please contact your account admin to get edit access.</p>
       </div>
     );
   }
@@ -59,6 +72,14 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <a
+          className="help-link"
+          href="https://app3-amber.vercel.app/how-to-use"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          How to use ↗
+        </a>
       </header>
 
       <main className="app-main">

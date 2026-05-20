@@ -90,6 +90,7 @@ export default function ItemSelector({ context, template }) {
       a.download = `invoice-${Date.now()}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
+      monday.execute('valueCreatedForUser');
       setStep(1);
       setLineItems([]);
       setClientName('');

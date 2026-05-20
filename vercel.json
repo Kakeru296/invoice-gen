@@ -1,7 +1,8 @@
 {
   "rewrites": [
     { "source": "/oauth/(.*)", "destination": "/api/server" },
-    { "source": "/api/(.*)", "destination": "/api/server" }
+    { "source": "/api/(.*)", "destination": "/api/server" },
+    { "source": "/health", "destination": "/api/server" }
   ],
   "functions": {
     "api/server.js": { "maxDuration": 30 }

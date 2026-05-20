@@ -42,6 +42,29 @@ body {
 
 .app-main { flex: 1; padding: 24px; max-width: 900px; margin: 0 auto; width: 100%; }
 
+.help-link {
+  margin-left: auto;
+  font-size: 12px;
+  color: #676879;
+  text-decoration: none;
+}
+.help-link:hover { color: #1f3c88; }
+
+.view-only-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 12px;
+  text-align: center;
+  color: #676879;
+  padding: 24px;
+}
+.view-only-icon { font-size: 48px; }
+.view-only-message h2 { font-size: 20px; color: #323338; }
+.view-only-message p { font-size: 14px; max-width: 360px; line-height: 1.5; }
+
 .setup-banner {
   background: #fff8e1;
   border: 1px solid #ffd54f;
